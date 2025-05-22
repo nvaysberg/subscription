@@ -28,4 +28,10 @@ public class ServiceService {
         return service;
     }
 
+    public Iterable<ru.nv.webrise.msvc.subscription.persistence.entities.Service> listServices() {
+
+        log.debug("SERVICE listServices");
+
+        return serviceRepository.findAll();
+    }
 }

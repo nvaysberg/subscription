@@ -28,4 +28,16 @@ public class ServiceApiController {
             return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
         }
     }
+
+    @CrossOrigin(origins = "*")                                 // CORS
+    @GetMapping("")
+    public ResponseEntity<?> listServices() {
+        log.debug("API listServices");
+        try {
+            return ResponseEntity.ok(serviceService.listServices());
+        } catch (Exception e) {
+            log.error("API listServices - error: {}", e.getMessage());
+            return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
+        }
+    }
 }
