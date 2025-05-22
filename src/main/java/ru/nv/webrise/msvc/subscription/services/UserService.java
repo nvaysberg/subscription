@@ -35,6 +35,11 @@ public class UserService {
         }
 
         return user;
+    }
 
+    public User getUserInfo(String uniqueId) {
+        log.debug("SERVICE getUserInfo: unique ID \"{}\"", uniqueId);
+
+        return userRepository.findByUniqueId(uniqueId).orElse(null);
     }
 }
