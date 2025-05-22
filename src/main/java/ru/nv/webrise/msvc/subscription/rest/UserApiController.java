@@ -115,4 +115,20 @@ public class UserApiController {
             return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
         }
     }
+
+    @CrossOrigin(origins = "*")                                 // CORS
+    @GetMapping("{uniqueId:.+}/subscriptions")
+    public ResponseEntity<?> listUserSubscriptions(@PathVariable("uniqueId") @NotBlank @Size(min = 1, max = Settings.MAX_LEN_UNIQUE_ID) String uniqueId) {
+        log.debug("API getUserSubscriptions: unique ID \"{}\"", uniqueId);
+        try {
+            User user = userService.getUserInfo(uniqueId);
+            return user != null
+                    ? ResponseEntity.ok(user.getSubscriptions())
+                    : ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            log.error("API getUserSubscriptions: unique ID \"{}\" - error: {}", uniqueId, e.getMessage());
+            return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
+        }
+    }
+
 }
