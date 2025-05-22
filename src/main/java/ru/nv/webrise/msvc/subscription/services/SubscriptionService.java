@@ -44,4 +44,14 @@ public class SubscriptionService {
         return subscriptionRepository.deleteByUniqueId(uniqueId) > 0;
     }
 
+    public Iterable<SubscriptionRepository.TopServicesTableEntry> getTopServices(int numServices) {
+        log.debug("SERVICE getTopServices: limit \"{}\"", numServices);
+
+        Iterable<SubscriptionRepository.TopServicesTableEntry> top = subscriptionRepository.getTopServices(numServices);
+        for (SubscriptionRepository.TopServicesTableEntry service: top) {
+            log.debug("service \"{}\" ({}) subscriptions {}",
+                    service.getName(), service.getUniqueId(), service.getNumSubscriptions());
+        }
+        return top;
+    }
 }
