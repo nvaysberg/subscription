@@ -98,4 +98,15 @@ public class UserService {
 
         return subscriptionService.addSubscription(user, service);
     }
+
+    public Iterable<Subscription> listSubscriptions(String userUniqueId) {
+        log.debug("SERVICE user.listSubscriptions: user unique ID \"{}\"", userUniqueId);
+
+        User user = getUserInfo(userUniqueId);
+        if (user == null) {
+            return null;
+        }
+
+        return subscriptionService.listSubscriptions(user);
+    }
 }

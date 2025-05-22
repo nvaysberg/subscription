@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.nv.webrise.msvc.subscription.Settings;
+import ru.nv.webrise.msvc.subscription.persistence.entities.Subscription;
 import ru.nv.webrise.msvc.subscription.persistence.entities.User;
 import ru.nv.webrise.msvc.subscription.rest.payload.request.AddSubscriptionRequest;
 import ru.nv.webrise.msvc.subscription.rest.payload.request.CreateUserRequest;
@@ -118,15 +119,15 @@ public class UserApiController {
 
     @CrossOrigin(origins = "*")                                 // CORS
     @GetMapping("{uniqueId:.+}/subscriptions")
-    public ResponseEntity<?> listUserSubscriptions(@PathVariable("uniqueId") @NotBlank @Size(min = 1, max = Settings.MAX_LEN_UNIQUE_ID) String uniqueId) {
-        log.debug("API getUserSubscriptions: unique ID \"{}\"", uniqueId);
+    public ResponseEntity<?> listSubscriptions(@PathVariable("uniqueId") @NotBlank @Size(min = 1, max = Settings.MAX_LEN_UNIQUE_ID) String uniqueId) {
+        log.debug("API listSubscriptions: unique ID \"{}\"", uniqueId);
         try {
-            User user = userService.getUserInfo(uniqueId);
-            return user != null
-                    ? ResponseEntity.ok(user.getSubscriptions())
+            Iterable<Subscription> subscriptions = userService.listSubscriptions(uniqueId);
+            return subscriptions != null
+                    ? ResponseEntity.ok(subscriptions)
                     : ResponseEntity.notFound().build();
         } catch (Exception e) {
-            log.error("API getUserSubscriptions: unique ID \"{}\" - error: {}", uniqueId, e.getMessage());
+            log.error("API listSubscriptions: unique ID \"{}\" - error: {}", uniqueId, e.getMessage());
             return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
         }
     }

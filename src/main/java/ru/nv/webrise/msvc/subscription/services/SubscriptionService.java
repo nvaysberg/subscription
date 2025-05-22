@@ -29,4 +29,10 @@ public class SubscriptionService {
 
         return subscription;
     }
+
+    public Iterable<Subscription> listSubscriptions(User user) {
+        log.debug("SERVICE subscription.listSubscriptions: user unique ID \"{}\"", user.getUniqueId());
+
+        return subscriptionRepository.findByUser(user);
+    }
 }
