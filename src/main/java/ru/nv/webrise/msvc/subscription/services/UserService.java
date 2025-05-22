@@ -39,6 +39,13 @@ public class UserService {
         return user;
     }
 
+    public Iterable<User> listUsers() {
+
+        log.debug("SERVICE listUsers");
+
+        return userRepository.findAll();
+    }
+
     public User getUserInfo(String uniqueId) {
         log.debug("SERVICE getUserInfo: unique ID \"{}\"", uniqueId);
 

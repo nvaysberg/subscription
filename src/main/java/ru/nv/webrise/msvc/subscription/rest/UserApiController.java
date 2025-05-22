@@ -40,6 +40,18 @@ public class UserApiController {
     }
 
     @CrossOrigin(origins = "*")                                 // CORS
+    @GetMapping("")
+    public ResponseEntity<?> listUsers() {
+        log.debug("API listUsers");
+        try {
+            return ResponseEntity.ok(userService.listUsers());
+        } catch (Exception e) {
+            log.error("API listUsers - error: {}", e.getMessage());
+            return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
+        }
+    }
+
+    @CrossOrigin(origins = "*")                                 // CORS
     @GetMapping("{uniqueId:.+}")
     public ResponseEntity<?> getUserInfo(@PathVariable("uniqueId") @NotBlank @Size(min = 1, max = Settings.MAX_LEN_UNIQUE_ID) String uniqueId) {
         log.debug("API getUserInfo: unique ID \"{}\"", uniqueId);
