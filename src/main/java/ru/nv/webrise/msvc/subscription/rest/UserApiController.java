@@ -70,4 +70,17 @@ public class UserApiController {
         }
     }
 
+    @CrossOrigin(origins = "*")                                 // CORS
+    @DeleteMapping("{uniqueId:.+}")
+    public ResponseEntity<?> deleteUser(@PathVariable("uniqueId") @NotBlank @Size(min = 1, max = Settings.MAX_LEN_UNIQUE_ID) String uniqueId) {
+        log.debug("API deleteUser: id \"{}\"", uniqueId);
+        try {
+            return userService.deleteUser(uniqueId)
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            log.error("API deleteUser: id \"{}\" - error: {}", uniqueId, e.getMessage());
+            return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
+        }
+    }
 }

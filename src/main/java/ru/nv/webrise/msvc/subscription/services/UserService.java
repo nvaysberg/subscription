@@ -3,6 +3,7 @@ package ru.nv.webrise.msvc.subscription.services;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.nv.webrise.msvc.subscription.persistence.entities.User;
 import ru.nv.webrise.msvc.subscription.persistence.repositories.UserRepository;
 import ru.nv.webrise.msvc.subscription.tools.Utils;
@@ -57,5 +58,12 @@ public class UserService {
         userRepository.save(user);
 
         return user;
+    }
+
+    @Transactional
+    public boolean deleteUser(String uniqueId) {
+        log.debug("SERVICE deleteUser: unique ID \"{}\"", uniqueId);
+
+        return userRepository.deleteByUniqueId(uniqueId) > 0;
     }
 }

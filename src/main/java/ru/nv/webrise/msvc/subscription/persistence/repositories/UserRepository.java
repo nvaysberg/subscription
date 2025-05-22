@@ -10,5 +10,6 @@ import java.util.Optional;
 public interface UserRepository extends CrudRepository<User, Long> {
 
     Optional<User> findByUniqueId(String uniqueId);
+    long deleteByUniqueId(String uniqueId);
 
 }
