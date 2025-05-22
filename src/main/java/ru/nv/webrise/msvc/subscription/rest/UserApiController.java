@@ -132,4 +132,23 @@ public class UserApiController {
         }
     }
 
+    @CrossOrigin(origins = "*")                                 // CORS
+    @DeleteMapping("{uniqueId:.+}/subscriptions/{subscriptionUniqueId:.+}")
+    public ResponseEntity<?> deleteSubscription(@PathVariable("uniqueId") @NotBlank @Size(min = 1, max = Settings.MAX_LEN_UNIQUE_ID) String uniqueId,
+                                                @PathVariable("subscriptionUniqueId") @NotBlank @Size(min = 1, max = Settings.MAX_LEN_UNIQUE_ID) String subscriptionUniqueId) {
+        log.debug("API deleteSubscription: user unique ID \"{}\", subscription unique ID \"{}\"",
+                uniqueId, subscriptionUniqueId);
+        try {
+            userService.deleteSubscription(uniqueId, subscriptionUniqueId);
+            return ResponseEntity.ok().build();
+        } catch (ClassNotFoundException e) {
+            log.error("API deleteSubscription: user unique ID \"{}\", subscription unique ID \"{}\" - error: {}",
+                    uniqueId, subscriptionUniqueId, e.getMessage());
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            log.error("API deleteSubscription: user unique ID \"{}\", subscription unique ID \"{}\" - error: {}",
+                    uniqueId, subscriptionUniqueId, e.getMessage());
+            return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
+        }
+    }
 }

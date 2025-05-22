@@ -109,4 +109,18 @@ public class UserService {
 
         return subscriptionService.listSubscriptions(user);
     }
+
+    public void deleteSubscription(String userUniqueId, String subscriptionUniqueId) throws ClassNotFoundException {
+        log.debug("SERVICE user.deleteSubscription: user unique ID \"{}\", subscription unique ID \"{}\"",
+                userUniqueId, subscriptionUniqueId);
+
+        User user = getUserInfo(userUniqueId);
+        if (user == null) {
+            throw new ClassNotFoundException("Пользователь не найден");
+        }
+
+        if (!subscriptionService.deleteSubscription(subscriptionUniqueId)) {
+            throw new ClassNotFoundException("Подписка не найдена");
+        }
+    }
 }

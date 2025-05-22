@@ -9,5 +9,6 @@ import ru.nv.webrise.msvc.subscription.persistence.entities.User;
 public interface SubscriptionRepository extends CrudRepository<Subscription, Long> {
 
     Iterable<Subscription> findByUser(User user);
+    long deleteByUniqueId(String uniqueId);
 
 }
