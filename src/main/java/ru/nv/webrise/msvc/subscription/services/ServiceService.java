@@ -34,4 +34,10 @@ public class ServiceService {
 
         return serviceRepository.findAll();
     }
+
+    public ru.nv.webrise.msvc.subscription.persistence.entities.Service getServiceInfo(String uniqueId) {
+        log.debug("SERVICE getServiceInfo: unique ID \"{}\"", uniqueId);
+
+        return serviceRepository.findByUniqueId(uniqueId).orElse(null);
+    }
 }

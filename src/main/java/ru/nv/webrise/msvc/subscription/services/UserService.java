@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.nv.webrise.msvc.subscription.persistence.entities.Subscription;
 import ru.nv.webrise.msvc.subscription.persistence.entities.User;
 import ru.nv.webrise.msvc.subscription.persistence.repositories.UserRepository;
 import ru.nv.webrise.msvc.subscription.tools.Utils;
@@ -14,6 +15,12 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ServiceService serviceService;
+
+    @Autowired
+    private SubscriptionService subscriptionService;
 
     public User createUser(String email, String firstName, String lastName) {
 
@@ -65,5 +72,23 @@ public class UserService {
         log.debug("SERVICE deleteUser: unique ID \"{}\"", uniqueId);
 
         return userRepository.deleteByUniqueId(uniqueId) > 0;
+    }
+
+    public Subscription addSubscription(String userUniqueId, String serviceUniqueId) throws ClassNotFoundException{
+        log.debug("SERVICE user.addSubscription: user unique ID \"{}\", service unique ID \"{}\"",
+                userUniqueId, serviceUniqueId);
+
+        ru.nv.webrise.msvc.subscription.persistence.entities.Service service =
+                serviceService.getServiceInfo(serviceUniqueId);
+        if (service == null) {
+            throw new ClassNotFoundException("Сервис не найден");
+        }
+
+        User user = getUserInfo(userUniqueId);
+        if (user == null) {
+            throw new ClassNotFoundException("Пользователь не найден");
+        }
+
+        return subscriptionService.addSubscription(user, service);
     }
 }

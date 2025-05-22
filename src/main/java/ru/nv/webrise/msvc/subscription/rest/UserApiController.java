@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.nv.webrise.msvc.subscription.Settings;
 import ru.nv.webrise.msvc.subscription.persistence.entities.User;
+import ru.nv.webrise.msvc.subscription.rest.payload.request.AddSubscriptionRequest;
 import ru.nv.webrise.msvc.subscription.rest.payload.request.CreateUserRequest;
 import ru.nv.webrise.msvc.subscription.rest.payload.request.UpdateUserRequest;
 import ru.nv.webrise.msvc.subscription.rest.payload.response.MessageResponse;
@@ -80,6 +81,25 @@ public class UserApiController {
                 : ResponseEntity.notFound().build();
         } catch (Exception e) {
             log.error("API deleteUser: id \"{}\" - error: {}", uniqueId, e.getMessage());
+            return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
+        }
+    }
+
+    @CrossOrigin(origins = "*")                                 // CORS
+    @PostMapping("{uniqueId:.+}/subscriptions")
+    public ResponseEntity<?> addSubscription(@PathVariable("uniqueId") @NotBlank @Size(min = 1, max = Settings.MAX_LEN_UNIQUE_ID) String uniqueId,
+                                             @Valid @RequestBody AddSubscriptionRequest request) {
+        log.debug("API addSubscription: user unique ID \"{}\", service unique ID \"{}\"",
+                uniqueId, request.getUniqueId());
+        try {
+            return ResponseEntity.ok(userService.addSubscription(uniqueId, request.getUniqueId()));
+        } catch (ClassNotFoundException e) {
+            log.error("API addSubscription: user unique ID \"{}\", service unique ID \"{}\" - error: {}",
+                    uniqueId, request.getUniqueId(), e.getMessage());
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            log.error("API addSubscription: user unique ID \"{}\", service unique ID \"{}\" - error: {}",
+                    uniqueId, request.getUniqueId(), e.getMessage());
             return ResponseEntity.internalServerError().body(new MessageResponse(e.getMessage()));
         }
     }
