@@ -26,13 +26,7 @@ public class UserService {
                 .lastName(lastName)
                 .build();
 
-        try {
-            userRepository.save(user);
-        } catch (Exception e) {
-            log.error("SERVICE createUser: email \"{}\", first name \"{}\", last name \"{}\" - error: {}",
-                    email, firstName, lastName, e.getMessage());
-            throw e;
-        }
+        userRepository.save(user);
 
         return user;
     }
@@ -41,5 +35,27 @@ public class UserService {
         log.debug("SERVICE getUserInfo: unique ID \"{}\"", uniqueId);
 
         return userRepository.findByUniqueId(uniqueId).orElse(null);
+    }
+
+    public User updateUser(String uniqueId, String email, String firstName, String lastName) {
+        log.debug("SERVICE updateUser: unique ID \"{}\", email \"{}\", first name \"{}\", last name \"{}\"",
+                uniqueId, email, firstName, lastName);
+
+        User user = userRepository.findByUniqueId(uniqueId).orElse(null);
+        if (user == null) {
+            return null;
+        }
+
+        // Cannot clear required fields
+        if (email != null) {
+            user.setEmail(email);
+        }
+        // Optional fields can be cleared
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+
+        userRepository.save(user);
+
+        return user;
     }
 }
