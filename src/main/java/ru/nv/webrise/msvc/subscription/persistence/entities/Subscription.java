@@ -26,14 +26,8 @@ public class Subscription extends ServiceFields {
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
-    @JsonBackReference
-    public User getUser() { return this.user; }
-
     @ManyToOne
     @JoinColumn(nullable = false, name = "service_id")
     private Service service;
-
-    @JsonBackReference
-    public Service getService() { return this.service; }
 
 }

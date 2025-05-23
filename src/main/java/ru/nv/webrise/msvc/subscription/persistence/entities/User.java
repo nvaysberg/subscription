@@ -1,6 +1,6 @@
 package ru.nv.webrise.msvc.subscription.persistence.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.nv.webrise.msvc.subscription.persistence.entities.embedded.ServiceFields;
@@ -34,10 +34,8 @@ public class User extends ServiceFields {
     @Column(length = MAX_LEN_LAST_NAME)
     private String lastName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     Set<Subscription> subscriptions;
-
-    @JsonManagedReference
-    public Set<Subscription> getSubscriptions() { return this.subscriptions; }
 
 }
