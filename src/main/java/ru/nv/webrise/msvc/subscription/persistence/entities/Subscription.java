@@ -1,6 +1,5 @@
 package ru.nv.webrise.msvc.subscription.persistence.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.nv.webrise.msvc.subscription.persistence.entities.embedded.ServiceFields;
